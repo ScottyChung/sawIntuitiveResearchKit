@@ -11,7 +11,7 @@
             "type": "PSM",
             "io": "xml/sawRobotIO1394-PSM1-3002.xml",
             "pid": "sawControllersPID-PSM.xml",
-            "kinematic": "psm-large-needle-driver.json"
+            "kinematic": "psm-pro-grasp.json"
         }
         ,
         {
@@ -35,7 +35,7 @@
             "type": "MTM",
             "io": "xml/sawRobotIO1394-MTMR-31866.xml",
             "pid": "sawControllersPID-MTMR.xml",
-            "kinematic": "mtmr.json"
+            "kinematic": "mtmr-deprecated.json"
         }
         ,
         {
@@ -43,7 +43,7 @@
             "type": "MTM",
             "io": "xml/sawRobotIO1394-MTML-55584.xml",
             "pid": "sawControllersPID-MTML.xml",
-            "kinematic": "mtml.json"
+            "kinematic": "mtml-deprecated.json"
         }
     ]
     ,
@@ -51,22 +51,22 @@
     [
         {
             "master": "MTMR",
-            "slave": "PSM1"
+            "slave": "PSM1",
+            "config-parameter": {
+                "rotation": [[-1.0, 0.0, 0.0],
+                             [0.0, -1.0, 0.0],
+                             [0.0, 0.0, 1.0]]
+                }
         }
         ,
         {
             "master": "MTML",
-            "slave": "PSM2"
+            "slave": "PSM2",
+            "config-parameter": {
+                "rotation": [[-1.0, 0.0, 0.0],
+                             [0.0, -1.0, 0.0],
+                             [0.0, 0.0, 1.0]]
+                }
         }
     ]
-    ,
-    "ecm-teleop":
-    {
-        "master-left": "MTML",
-        "master-right": "MTMR",
-        "slave": "ECM",
-        "rotation" : [[ 1.0000,  0.0000,  0.0000],
-                      [ 0.0000,  1.0000,  0.0000],
-                      [ 0.0000,  0.0000,  1.0000]]
-    }
 }
