@@ -1,5 +1,17 @@
 /* -*- Mode: Javascript; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 {
+    "io": {
+        "footpedals": "sawRobotIO1394-MTMR-foot-pedals.xml"
+    }
+    ,
+    "operator-present": {
+        "io": "sawRobotIO1394-MTMR-dv-head-sensor.xml"
+    }
+    ,
+    "endoscope-focus": {
+        "io": "sawRobotIO1394-MTML-dv-endoscope-focus.xml"
+    }
+    ,
     "arms":
     [
         {
@@ -52,17 +64,24 @@
         {
             "name": "MTML",
             "type": "MTM",
-            "io": "sawRobotIO1394-MTML-34863-foot-pedal.xml",
+            "io": "sawRobotIO1394-MTML-34863.xml",
             "pid": "sawControllersPID-MTML.xml",
-            "kinematic": "mtml.json"
+            "kinematic": "mtm.json",
+            "base-frame": {
+                "reference-frame": "HRSV",
+                "transform": [[ -1.0,  0.0,          0.0,          0.180],
+                              [  0.0,  0.866025404,  0.5,          0.400],
+                              [  0.0,  0.5,         -0.866025404,  0.475],
+                              [  0.0,  0.0,          0.0,          1.0]]
+            }
         }
     ]
     ,
     "psm-teleops":
     [
         {
-            "master": "MTML",
-            "slave": "PSM1"
+            "mtm": "MTML",
+            "psm": "PSM1"
         }
     ]
 }

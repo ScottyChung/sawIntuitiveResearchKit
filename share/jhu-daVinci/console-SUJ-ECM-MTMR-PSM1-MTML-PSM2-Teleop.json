@@ -67,7 +67,7 @@
             "type": "MTM",
             "io": "sawRobotIO1394-MTMR-32336.xml",
             "pid": "sawControllersPID-MTMR.xml",
-            "kinematic": "mtm.json",
+            "arm": "MTMR-32336.json",
             "base-frame": {
                 "reference-frame": "HRSV",
                 "transform": [[ -1.0,  0.0,          0.0,         -0.180],
@@ -82,7 +82,7 @@
             "type": "MTM",
             "io": "sawRobotIO1394-MTML-34863.xml",
             "pid": "sawControllersPID-MTML.xml",
-            "kinematic": "mtm.json",
+            "arm": "MTML-34863.json",
             "base-frame": {
                 "reference-frame": "HRSV",
                 "transform": [[ -1.0,  0.0,          0.0,          0.180],
@@ -96,20 +96,20 @@
     "psm-teleops":
     [
         {
-            "master": "MTMR",
-            "slave": "PSM1"
+            "mtm": "MTMR",
+            "psm": "PSM1"
         }
         ,
         {
-            "master": "MTML",
-            "slave": "PSM2"
+            "mtm": "MTML",
+            "psm": "PSM2"
         }
     ]
     ,
     "ecm-teleop":
     {
-        "master-left": "MTML",
-        "master-right": "MTMR",
-        "slave": "ECM"
+        "mtm-left": "MTML",
+        "mtm-right": "MTMR",
+        "ecm": "ECM"
     }
 }

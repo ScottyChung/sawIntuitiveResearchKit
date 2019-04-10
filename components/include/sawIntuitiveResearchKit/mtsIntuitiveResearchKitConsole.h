@@ -22,6 +22,7 @@ http://www.cisst.org/cisst/license.txt.
 
 #include <cisstMultiTask/mtsTaskFromSignal.h>
 #include <cisstParameterTypes/prmEventButton.h>
+#include <cisstParameterTypes/prmKeyValue.h>
 #include <cisstParameterTypes/prmPositionCartesianGet.h>
 #include <cisstParameterTypes/prmPositionCartesianSet.h>
 
@@ -73,7 +74,7 @@ public:
 
         /*! Create and configure the robot arm. */
         void ConfigureArm(const ArmType armType,
-                          const std::string & configFile,
+                          const std::string & kinematicsConfigFile,
                           const double & periodInSeconds = mtsIntuitiveResearchKit::ArmPeriod);
 
         /*! Check if mBaseFrame has a valid name and if it does
@@ -196,8 +197,10 @@ public:
         friend class dvrk::console;
 
         TeleopPSM(const std::string & name,
+                  const std::string & nameMTM,
                   const std::string & masterComponentName,
                   const std::string & masterInterfaceName,
+                  const std::string & namePSM,
                   const std::string & slaveComponentName,
                   const std::string & slaveInterfaceName,
                   const std::string & consoleName);
@@ -213,11 +216,22 @@ public:
         /*! Accessors */
         const std::string & Name(void) const;
 
+        /*! Turn on/off selected */
+        inline const bool & Selected(void) const {
+            return mSelected;
+        }
+        inline void SetSelected(const bool selected) {
+            mSelected = selected;
+        }
+
     protected:
+        bool mSelected;
         std::string mName;
         TeleopPSMType mType;
+        std::string mMTMName;
         std::string mMTMComponentName;
         std::string mMTMInterfaceName;
+        std::string mPSMName;
         std::string mPSMComponentName;
         std::string mPSMInterfaceName;
         std::string mConsoleName;
@@ -259,6 +273,7 @@ public:
 
 protected:
     bool mConfigured;
+    double mTimeOfLastErrorBeep;
     bool mTeleopEnabled;
     bool mTeleopPSMRunning;
     bool mTeleopPSMAligning;
@@ -274,6 +289,14 @@ protected:
     /*! List to manage multiple PSM teleoperations */
     typedef std::map<std::string, TeleopPSM *> TeleopPSMList;
     TeleopPSMList mTeleopsPSM;
+
+    /*! List to manage the teleopPSM components for each MTM */
+    typedef std::multimap<std::string, TeleopPSM *> TeleopPSMByMTMList;
+    typedef TeleopPSMByMTMList::iterator TeleopPSMByMTMIterator;
+    typedef TeleopPSMByMTMList::const_iterator TeleopPSMByMTMConstIterator;
+    TeleopPSMByMTMList mTeleopsPSMByMTM;
+    /*! Name of default MTM to cycle teleops if no name is provided */
+    std::string mTeleopMTMToCycle;
 
     /*! Single ECM bimanual teleoperation */
     TeleopECM * mTeleopECM;
@@ -302,6 +325,11 @@ protected:
     void PowerOn(void);
     void Home(void);
     void TeleopEnable(const bool & enable);
+    void CycleTeleopPSMByMTM(const std::string & mtmName);
+    void SelectTeleopPSM(const prmKeyValue & mtmPsm);
+    bool GetPSMSelectedForMTM(const std::string & mtmName, std::string & psmName) const;
+    bool GetMTMSelectedForPSM(const std::string & psmName, std::string & mtmName) const;
+    void EventSelectedTeleopPSMs(void) const;
     void UpdateTeleopState(void);
     void SetScale(const double & scale);
     void SetVolume(const double & volume);
@@ -335,6 +363,8 @@ protected:
     mtsInterfaceProvided * mInterface;
     struct {
         mtsFunctionWrite Scale;
+        mtsFunctionWrite TeleopPSMSelected;
+        mtsFunctionWrite TeleopPSMUnselected;
     } ConfigurationEvents;
 
     void ErrorEventHandler(const mtsMessage & message);
